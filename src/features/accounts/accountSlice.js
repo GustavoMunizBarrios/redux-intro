@@ -17,22 +17,28 @@ const accountSlice = createSlice({
     withdraw(state, action) {
       state.balance -= action.payload;
     },
-    loanRequest(state, action) {
-      if (state.loan > 0) return;
+    requestLoan: {
+      // if we need to receive 2 parameters for our action creator, then we should write the prepare method
+      prepare(amount, purpose) {
+        return { payload: { amount, purpose } };
+      },
+      reducer(state, action) {
+        if (state.loan > 0) return;
 
-      state.loan = action.payload.amount;
-      state.loanPurpose = action.payload.purpose;
-      state.balance += action.payload.amount;
+        state.loan = action.payload.amount;
+        state.loanPurpose = action.payload.purpose;
+        state.balance += action.payload.amount;
+      },
     },
     payLoan(state, action) {
+      state.balance -= state.loan;
       state.loan = 0;
       state.loanPurpose = "";
-      state.balance -= state.loan;
     },
   },
 });
 console.log(accountSlice);
-export const { deposit, withdraw, loanRequest, payLoan } = accountSlice.actions;
+export const { deposit, withdraw, requestLoan, payLoan } = accountSlice.actions;
 export default accountSlice.reducer;
 /* 
 export default function accountReducer(state = initialState, action) {
