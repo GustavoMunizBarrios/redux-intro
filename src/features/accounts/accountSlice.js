@@ -43,6 +43,7 @@ const accountSlice = createSlice({
 });
 export const { withdraw, requestLoan, payLoan } = accountSlice.actions;
 
+//This is a thunk inside an action creator for handle asynchronous operations
 export function deposit(amount, currency) {
   if (currency === "USD") {
     return { type: "account/deposit", payload: amount };
